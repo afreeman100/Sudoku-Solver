@@ -9,7 +9,6 @@ class Node:
 
     def getChildren(self):
         sudoku = self.sudoku
-
         children = []
 
         #go through whole grid
@@ -73,16 +72,11 @@ class Node:
         #reshape section into row form and sort it. Does it match [1,2...8,9] ?
         r = np.sort(np.reshape(section,9))
         t = np.arange(1,10)
-
         return np.all(np.equal(r, t))
 
 
 
-
-
 def sudoku_solver(sudoku):
-
-
     current = Node(sudoku)
     frontier = [current]
 
@@ -92,7 +86,7 @@ def sudoku_solver(sudoku):
 
         for child in children:
             if child.isSolution():
-                return child
+                return child.sudoku
             frontier.append(child)
 
     return False
@@ -112,13 +106,7 @@ solutions = np.load("data/solutions.npy")
 print("Shape of solutions array:", solutions.shape, "; Type of array values:", solutions.dtype, "\n\n\n")
 
 
-print("Problem:")
-print(sudokus[0])
-
-print("\n\nMy solution:")
-solve = sudoku_solver(sudokus[0])
-print(solve.sudoku)
-
-
-print("\n\nGiven solution:")
-print(solutions[0])
+for i,e in enumerate(sudokus) :
+    solve = sudoku_solver(e)
+    correct = np.all(np.equal(solve, solutions[i]))
+    print("Sudoku ", i, ": ", correct)
