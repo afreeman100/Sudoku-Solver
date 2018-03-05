@@ -81,7 +81,8 @@ def sudoku_solver(sudoku):
     frontier = [current]
 
     while len(frontier) > 0:
-        current = frontier.pop(0)
+        #pop from top of list -> depth first search
+        current = frontier.pop()
         children = current.getChildren()
 
         for child in children:
