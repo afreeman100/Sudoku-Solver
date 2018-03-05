@@ -1,26 +1,6 @@
 import numpy as np
 
 
-
-#returns true if section contains all numbers from 1-9
-def solutionTest(section):
-    #reshape section into row form and sort it. Does it match [1,2...8,9] ?
-    r = np.sort(np.reshape(section,9))
-    t = np.arange(1,10)
-
-    return np.all(np.equal(r, t))
-
-
-def validTest(section):
-    #count occurrences of each number -> more that 1 occurrence is invalid
-    for i in range(1, 10):
-        if np.count_nonzero(section == i) > 1:
-            return False
-
-    return True
-
-
-
 class Node:
 
     def __init__(self, toSolve):
@@ -70,13 +50,31 @@ class Node:
     #returns true if a grid does not have any duplicate values in any rows/columns/sections
     def isValid(self):
         splits = self.splitGrid()
-        return all(validTest(s) for s in splits)
+        return all(self.validTest(s) for s in splits)
+
+
+    def validTest(self, section):
+        # count occurrences of each number -> more that 1 occurrence is invalid
+        for i in range(1, 10):
+            if np.count_nonzero(section == i) > 1:
+                return False
+
+        return True
 
 
     # each row, column and 3x3 must be correct for grid to be solution
     def isSolution(self):
         splits = self.splitGrid()
-        return all(solutionTest(s) for s in splits)
+        return all(self.solutionTest(s) for s in splits)
+
+
+    #returns true if section contains all numbers from 1-9
+    def solutionTest(self, section):
+        #reshape section into row form and sort it. Does it match [1,2...8,9] ?
+        r = np.sort(np.reshape(section,9))
+        t = np.arange(1,10)
+
+        return np.all(np.equal(r, t))
 
 
 
