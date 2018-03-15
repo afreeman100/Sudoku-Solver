@@ -6,6 +6,7 @@ class Node:
     def __init__(self, toSolve):
         self.sudoku = toSolve
 
+
     def getChildren(self):
         sudoku = self.sudoku
         children = []
@@ -26,6 +27,7 @@ class Node:
 
                     return children
 
+
     # split grid into rows, columns and 3x3 boxes and return list of results
     def splitGrid(self):
         sudoku = self.sudoku
@@ -43,10 +45,12 @@ class Node:
 
         return splits
 
+
     # returns true if a grid does not have any duplicate values in any rows/columns/sections
     def isValid(self):
         splits = self.splitGrid()
         return all(self.validTest(s) for s in splits)
+
 
     def validTest(self, section):
         # count occurrences of each number -> more that 1 occurrence is invalid
@@ -56,10 +60,12 @@ class Node:
 
         return True
 
+
     # each row, column and 3x3 must be correct for grid to be solution
     def isSolution(self):
         splits = self.splitGrid()
         return all(self.solutionTest(s) for s in splits)
+
 
     # returns true if section contains all numbers from 1-9
     def solutionTest(self, section):
@@ -83,18 +89,29 @@ def sudoku_solver(sudoku):
                 return child.sudoku
             frontier.append(child)
 
-    return False
+    #return array of -1s if unsolvable
+    unsolved = np.empty([9,9])
+    unsolved.fill(-1)
+    return unsolved
 
 
-# Load sudokus
-sudokus = np.load("data/sudokus.npy")
-print("Shape of sudokus array:", sudokus.shape, "; Type of array values:", sudokus.dtype)
 
-# Load solutions
-solutions = np.load("data/solutions.npy")
-print("Shape of solutions array:", solutions.shape, "; Type of array values:", solutions.dtype, "\n\n\n")
+def main():
 
-for i, e in enumerate(sudokus):
-    solve = sudoku_solver(e)
-    correct = np.all(np.equal(solve, solutions[i]))
-    print("Sudoku ", i, ": ", correct)
+    # Load sudokus
+    sudokus = np.load("data/sudokus.npy")
+    print("Shape of sudokus array:", sudokus.shape, "; Type of array values:", sudokus.dtype)
+
+    # Load solutions
+    solutions = np.load("data/solutions.npy")
+    print("Shape of solutions array:", solutions.shape, "; Type of array values:", solutions.dtype, "\n\n\n")
+
+    #solve each and check the result matches the correct answer
+    for i, e in enumerate(sudokus):
+
+        solve = sudoku_solver(e)
+        correct = np.all(np.equal(solve, solutions[i]))
+        print("Sudoku ", i, ": ", correct)
+
+
+main()
